@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+	#div_img1{
+		position:absolute;
+		visibility:visible;
+		left:550px;
+		top:220px;	
+		
+	}
+
+	#map {
+		position:absolute;
+        height: 400px;
+        width: 400px;
+        left: 850px;
+        top: 130px;
+      }
+
+      #map_title {
+      	position:absolute;
+        left: 850px;
+        top: 70px;
+      }
+</style>
+
+
+
+<style type="text/css">
+.sk-folding-cube {
+
+  position: absolute;
+  width: 70px;
+  height: 60px;
+  left:800px;
+  top:100px;
+  -webkit-transform: rotateZ(45deg);
+          transform: rotateZ(45deg);
+}
+
+.sk-folding-cube .sk-cube {
+  float: left;
+  width: 50%;
+  height: 50%;
+  position: relative;
+  -webkit-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+          transform: scale(1.1); 
+}
+.sk-folding-cube .sk-cube:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #356B80;
+  -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+          animation: sk-foldCubeAngle 2.4s infinite linear both;
+  -webkit-transform-origin: 100% 100%;
+      -ms-transform-origin: 100% 100%;
+          transform-origin: 100% 100%;
+}
+.sk-folding-cube .sk-cube2 {
+  -webkit-transform: scale(1.1) rotateZ(90deg);
+          transform: scale(1.1) rotateZ(90deg);
+}
+.sk-folding-cube .sk-cube3 {
+  -webkit-transform: scale(1.1) rotateZ(180deg);
+          transform: scale(1.1) rotateZ(180deg);
+}
+.sk-folding-cube .sk-cube4 {
+  -webkit-transform: scale(1.1) rotateZ(270deg);
+          transform: scale(1.1) rotateZ(270deg);
+}
+.sk-folding-cube .sk-cube2:before {
+  -webkit-animation-delay: 0.3s;
+          animation-delay: 0.3s;
+}
+.sk-folding-cube .sk-cube3:before {
+  -webkit-animation-delay: 0.6s;
+          animation-delay: 0.6s; 
+}
+.sk-folding-cube .sk-cube4:before {
+  -webkit-animation-delay: 0.9s;
+          animation-delay: 0.9s;
+}
+@-webkit-keyframes sk-foldCubeAngle {
+  0%, 10% {
+    -webkit-transform: perspective(140px) rotateX(-180deg);
+            transform: perspective(140px) rotateX(-180deg);
+    opacity: 0; 
+  } 25%, 75% {
+    -webkit-transform: perspective(140px) rotateX(0deg);
+            transform: perspective(140px) rotateX(0deg);
+    opacity: 1; 
+  } 90%, 100% {
+    -webkit-transform: perspective(140px) rotateY(180deg);
+            transform: perspective(140px) rotateY(180deg);
+    opacity: 0; 
+  } 
+}
+
+@keyframes sk-foldCubeAngle {
+  0%, 10% {
+    -webkit-transform: perspective(140px) rotateX(-180deg);
+            transform: perspective(140px) rotateX(-180deg);
+    opacity: 0; 
+  } 25%, 75% {
+    -webkit-transform: perspective(140px) rotateX(0deg);
+            transform: perspective(140px) rotateX(0deg);
+    opacity: 1; 
+  } 90%, 100% {
+    -webkit-transform: perspective(140px) rotateY(180deg);
+            transform: perspective(140px) rotateY(180deg);
+    opacity: 0; 
+  }
+}
+
+
+#loading{
+		position:absolute;
+		visibility:visible;
+		left:650px;
+		top:150px;	
+	}
+
+
+</style>
+
+
+</head>
+
+
+
+
+
+
+
+
+<body background="https://firebasestorage.googleapis.com/v0/b/testhasni1234.appspot.com/o/background.c321e3367.jpg?alt=media&token=0da097c3-8e32-452c-aa0b-88fd37baf7fe">
+
+<h1 style="margin-left:12em;">Welcome to Zlatan Team HomePage!</h1>
+
+<div id="div_img">
+<h2 style="margin-left:0.5em;">Rasp Streaming :</h2>
+<img id="img" width="500" height="400">
+</div>
+
+<div>
+
+</div>
+
+<div class="sk-folding-cube" id="loading">
+  <div class="sk-cube1 sk-cube"></div>
+  <div class="sk-cube2 sk-cube"></div>
+  <div class="sk-cube4 sk-cube"></div>
+  <div class="sk-cube3 sk-cube"></div>
+</div>
+<h2 id="map_title">Potholes Map :</h2>
+<div id="map"></div>
+<div id="div_img1">
+<h2 style="margin-left:0.0em;">Last Pothole Detected :</h2>
+<img id="img1" width="200" height="200">
+<h3 id="result" style="margin-left:0em;">.  .  .</h3>
+</div>
+
+</body>
+
+
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAfyGPlDMqPVvI_CLbGZoWXdx2ACW2FHSo",
+    authDomain: "testhasni1234.firebaseapp.com",
+    databaseURL: "https://testhasni1234.firebaseio.com",
+    projectId: "testhasni1234",
+    storageBucket: "testhasni1234.appspot.com",
+    messagingSenderId: "392277264965"
+  };
+  firebase.initializeApp(config);
+</script>
+
+
+
+<script>
+
+//Retrieve data from firebase, show it on the page and send it to the server :
+var data = document.getElementById("results");
+//var dataRef = firebase.database().ref().child("images").child("1");
+var dataRef = firebase.database().ref().child("images");
+dataRef.on('child_added',function(snapshot){
+
+	socket.emit('message',snapshot.val());
+	var image = document.getElementById('img');
+	image.setAttribute('src', 'data:image/jpeg;base64,'+snapshot.val());
+
+});
+ 
+
+</script>
+
+
+
+<script>
+
+		var long;
+		var latitude;
+
+      function initMap() {
+        var myLatLng = {lat: 35.8203969629386, lng: 10.59308409690857};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: myLatLng
+        });
+
+
+      //Ajouter des Marker chaque fois qu'un nouveau donné est ajouté 
+      var firebaseHeadingRef1=firebase.database().ref().child("map");
+      firebaseHeadingRef1.on("child_added", function(snapshot, prevChildKey){ 
+      var newpost = snapshot.val();
+      var arr = newpost.split(",");
+      latitude=arr[0];
+      long=arr[1];
+      socket.on('marker_result',function(data){
+			var marker = new google.maps.Marker({
+          	position: new google.maps.LatLng(parseFloat(latitude),parseFloat(long)),
+          	map: map,
+          	title: '7ofra'
+      		});	
+	  });     
+      
+
+      
+      }); 
+
+      }
+
+      
+    </script>
+     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2HZqJaGpmYnJ18bGYdx75I10KVoNe2z8&callback=initMap">
+    </script>
+
+
+
+
+
+<script src="socket.io/socket.io.js"></script>
+<script>
+    
+    var socket = io().connect('http://localhost:80');
+
+
+socket.on('proba_result',function(data){
+
+	//var resultat = data.toString();
+	//console.log(data+"okeeeey");
+        //append+= '<br>[+]'+data;
+        //document.getElementById('results').innerHTML=append;
+        //document.getElementById('get').value=append+"0123";
+        //document.getElementById("result").innerHTML = resultat;
+	//var split_res = resultat.split("=");
+	//alert(split_res[1].split(")")[0]);
+	//var probability = split_res[1].split(")")[0];
+	//alert(parseFloat(probability));
+	//if(parseFloat(probability) > 0.7){
+		document.getElementById("result").innerHTML = data;
+		//}
+	
+    });	
+
+socket.on('img_result',function(data){
+	document.getElementById('img1').setAttribute('src', 'data:image/jpeg;base64,'+data);
+});
+
+
+</script>
+
+
+
+</html>
